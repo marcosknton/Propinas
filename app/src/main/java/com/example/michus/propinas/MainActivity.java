@@ -1,15 +1,27 @@
 package com.example.michus.propinas;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.nio.ByteBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AportacionDialogFragment.NoticeDialogListener {
@@ -22,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
     private TextView textView;
     List <Fragment> mylist= new ArrayList<>();
     SharedPreferences prefs;
-
+    //instancia de acceso a la base de datos
+    BBDD_helper helper=new BBDD_helper(this);
 
 
     @Override
@@ -38,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
         cantidad=recuperarAportacion();
         textView.setText(cantidad);
         numero=Float.parseFloat(cantidad);
+        fechaActual();
 
         bsumar.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -81,6 +95,23 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id= item.getItemId();
+        if (id==R.id.id_detalle)
+        {
+            Intent intent=new Intent(this,Buscador.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onDialogNegativeClick(int number ) {
 
     }
@@ -100,8 +131,33 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
         editor.commit();
     }
 
+    public void guardarAportacionSQL(String cantidad){
+        // Gets the data repository in write mode
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(Estructura_BBDD.NOMBRE_COLUMNA1, 1);
+        values.put(Estructura_BBDD.NOMBRE_COLUMNA2, fechaActual());
+        values.put(Estructura_BBDD.NOMBRE_COLUMNA3,cantidad);
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(Estructura_BBDD.NOMBRE_TABLA, null, values);
+    }
+
     public String recuperarAportacion(){
         cantidad = prefs.getString("cantidad", "0");
         return cantidad;
+    }
+
+    public String fechaActual(){
+
+        Date hoy = Calendar.getInstance().getTime();
+        DateFormat df = new SimpleDateFormat("yyyy--dd hh:mm");
+        String text = df.format(hoy);
+        Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+        toast.show();
+
+        return text;
     }
 }

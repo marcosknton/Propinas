@@ -16,13 +16,17 @@ public class Estructura_BBDD {
     public static final String NOMBRE_COLUMNA1 = "Id";
     public static final String NOMBRE_COLUMNA2 = "Fecha";
     public static final String NOMBRE_COLUMNA3 = "Aportacion";
+    public static final String NOMBRE_COLUMNA4 ="Tipo";
+    public static final String NOMBRE_COLUMNA5 ="Total";
 
 
     public static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + Estructura_BBDD.NOMBRE_TABLA + " (" +
                     Estructura_BBDD.NOMBRE_COLUMNA1 + " INTEGER PRIMARY KEY," +
                     Estructura_BBDD.NOMBRE_COLUMNA2 + " TEXT," +
-                    Estructura_BBDD.NOMBRE_COLUMNA3 + " TEXT)";
+                    Estructura_BBDD.NOMBRE_COLUMNA3 + " TEXT," +
+                    Estructura_BBDD.NOMBRE_COLUMNA4 + " TEXT," +
+                    Estructura_BBDD.NOMBRE_COLUMNA5 + " TEXT)";
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + Estructura_BBDD.NOMBRE_TABLA;

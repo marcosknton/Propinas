@@ -1,8 +1,10 @@
 package com.example.michus.propinas;
 
+import android.app.DatePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 public class Buscador extends AppCompatActivity {
@@ -32,7 +34,12 @@ public class Buscador extends AppCompatActivity {
     }
 
     private void showDatePickerDialog() {
-        DatePickerFragment newFragment = new DatePickerFragment();
+        DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+
+            }
+        });
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 }

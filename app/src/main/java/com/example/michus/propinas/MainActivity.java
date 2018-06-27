@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
 
     float numero;
     String cantidad;
+    String tipo;
     private Button bsumar;
     private Button brestar;
     private TextView textView;
@@ -80,14 +81,17 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
         for (int i = 0; i < mylist.size(); ++i) {
            if (mylist.get(i).getTag().contentEquals("aportacion")){
                numero+=number;
+               tipo="positiva";
                }
             else if (mylist.get(i).getTag().contentEquals("restaraportación")){
                numero=numero-number;
+               tipo="negativa";
                }
 
             cantidad=Float.toString(numero);
             textView.setText(cantidad);
             guardarAportacion(cantidad);
+            guardarAportacionSQL(Float.toString(number),tipo,cantidad);
         }
 
 
@@ -131,15 +135,17 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
         editor.commit();
     }
 
-    public void guardarAportacionSQL(String cantidad){
+    public void guardarAportacionSQL(String aportacion,String tipo,String cantidad){
         // Gets the data repository in write mode
         SQLiteDatabase db = helper.getWritableDatabase();
 
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(Estructura_BBDD.NOMBRE_COLUMNA1, 1);
+        values.put(Estructura_BBDD.NOMBRE_COLUMNA1, 2);
         values.put(Estructura_BBDD.NOMBRE_COLUMNA2, fechaActual());
-        values.put(Estructura_BBDD.NOMBRE_COLUMNA3,cantidad);
+        values.put(Estructura_BBDD.NOMBRE_COLUMNA3,aportacion);
+        values.put(Estructura_BBDD.NOMBRE_COLUMNA4,tipo);
+        values.put(Estructura_BBDD.NOMBRE_COLUMNA5,cantidad);
 
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(Estructura_BBDD.NOMBRE_TABLA, null, values);
@@ -153,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
     public String fechaActual(){
 
         Date hoy = Calendar.getInstance().getTime();
-        DateFormat df = new SimpleDateFormat("yyyy--dd hh:mm");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         String text = df.format(hoy);
         Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
         toast.show();

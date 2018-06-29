@@ -1,45 +1,99 @@
 package com.example.michus.propinas;
 
 import android.app.DatePickerDialog;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
-public class Buscador extends AppCompatActivity {
+public class Buscador extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText fechainicio;
-    private EditText fechafinal;
+    public EditText etfechainicio;
+    public EditText etfechafinal;
+    BBDD_helper helper = new BBDD_helper(this);
+    String selectfechainicio = "";
+    String selectfechafinal = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscador);
 
-        fechainicio= findViewById(R.id.fecha_inicio);
-        fechafinal=findViewById(R.id.fecha_final);
-        fechainicio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDatePickerDialog();
-            }
-        });
-        fechafinal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDatePickerDialog();
-            }
-        });
+        etfechainicio = findViewById(R.id.fecha_inicio);
+        etfechainicio.setOnClickListener(this);
+        etfechafinal = findViewById(R.id.fecha_final);
+        etfechafinal.setOnClickListener(this);
+
+        }
+
+        public void BuscarAportaionSQL() {
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+// Define un array de string llamado projection que especifica que columnas de la base de datos queremos visualizar
+// para nuestra consulta
+        String[] projection = {
+                Estructura_BBDD.NOMBRE_COLUMNA3,
+                Estructura_BBDD.NOMBRE_COLUMNA4,
+                Estructura_BBDD.NOMBRE_COLUMNA5
+
+        };
+
+// Filter results WHERE "title" = 'My Title'
+        String selection = Estructura_BBDD.NOMBRE_COLUMNA2 + " = ?";
+        String[] selectionArgs = {etfechainicio.getText().toString()};
+
+// con que criterio vamos a ordenar el resultado de la busqueda
+        //String sortOrder =
+        // FeedEntry.COLUMN_NAME_SUBTITLE + " DESC";
+
+        Cursor cursor = db.query(
+                Estructura_BBDD.NOMBRE_TABLA,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null              // The sort order
+        );
     }
 
-    private void showDatePickerDialog() {
+    private void showDatePickerDialog(final EditText editText) {
         DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                // +1 because january is zero
+                final String selectedDate = year + "-" + twoDigits(day) + "-" + twoDigits(month + 1);
+                editText.setText(selectedDate);
+                if (editText.equals(etfechainicio)){
+                    selectfechainicio=selectedDate;
+                    }
+                else {
+                    selectfechafinal=selectedDate;
+                }
             }
         });
         newFragment.show(getSupportFragmentManager(), "datePicker");
+        }
+
+    private String twoDigits(int n) {
+        return (n <= 9) ? ("0" + n) : String.valueOf(n);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fecha_inicio:
+                showDatePickerDialog(etfechainicio);
+                break;
+
+            case R.id.fecha_final:
+                showDatePickerDialog(etfechafinal);
+                break;
+        }
     }
 }

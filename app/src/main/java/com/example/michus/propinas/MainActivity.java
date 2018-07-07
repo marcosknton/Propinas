@@ -141,14 +141,13 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
 
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(Estructura_BBDD.NOMBRE_COLUMNA1, 2);
         values.put(Estructura_BBDD.NOMBRE_COLUMNA2, fechaActual());
         values.put(Estructura_BBDD.NOMBRE_COLUMNA3,aportacion);
         values.put(Estructura_BBDD.NOMBRE_COLUMNA4,tipo);
         values.put(Estructura_BBDD.NOMBRE_COLUMNA5,cantidad);
 
         // Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(Estructura_BBDD.NOMBRE_TABLA, null, values);
+        db.insert(Estructura_BBDD.NOMBRE_TABLA, null, values);
     }
 
     public String recuperarAportacion(){
@@ -159,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
     public String fechaActual(){
 
         Date hoy = Calendar.getInstance().getTime();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String text = df.format(hoy);
         Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
         toast.show();

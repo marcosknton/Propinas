@@ -25,7 +25,7 @@ class Adaptador extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view=inflater.inflate(R.layout.registro_aportacion,null);
+        View view=inflater.inflate(R.layout.registro_aportacion_relativelayout,null);
         return new ViewHolder(view);
     }
 

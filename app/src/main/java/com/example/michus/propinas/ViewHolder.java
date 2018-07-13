@@ -16,10 +16,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public ViewHolder(View itemView) {
         super(itemView);
-        fecha_registro=(TextView)itemView.findViewById(R.id.fecha_regitro);
-        cantidad_registro=(TextView)itemView.findViewById(R.id.cantidad_registro);
-        tipo_registro=(TextView)itemView.findViewById(R.id.tipo_registro);
-        total_registro=(TextView)itemView.findViewById(R.id.total_registro);
+        fecha_registro=(TextView)itemView.findViewById(R.id.fecha_regitro_relative);
+        cantidad_registro=(TextView)itemView.findViewById(R.id.cantidad_registro_relative);
+        tipo_registro=(TextView)itemView.findViewById(R.id.tipo_registro_relative);
+        total_registro=(TextView)itemView.findViewById(R.id.total_registro_relative);
 
     }
 }

@@ -3,20 +3,23 @@ package com.example.michus.propinas;
 import android.app.DatePickerDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Buscador extends AppCompatActivity implements View.OnClickListener {
 
     public EditText etfechainicio;
     public EditText etfechafinal;
+    public Button boton_buscar;
+    public TextView cantidad_total;
     BBDD_helper helper = new BBDD_helper(this);
     String selectfechainicio = "";
     String selectfechafinal = "";
@@ -24,7 +27,8 @@ public class Buscador extends AppCompatActivity implements View.OnClickListener 
     private RecyclerView recyclerView;
     private  RecyclerView.LayoutManager layoutManager;
     public Adaptador adaptador;
-    Cursor cursor;
+    Cursor cursito;
+    Cursor totalcursor;
 
 
 
@@ -37,9 +41,21 @@ public class Buscador extends AppCompatActivity implements View.OnClickListener 
         etfechainicio.setOnClickListener(this);
         etfechafinal = findViewById(R.id.fecha_final);
         etfechafinal.setOnClickListener(this);
+        boton_buscar=findViewById(R.id.button_buscar);
+        cantidad_total=findViewById(R.id.textView_cantidad_total);
+
+        boton_buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BuscarAportaionSQL();
+                BuscarSumaAportacioSQL();
+            }
+        });
+
+
 
         //recyclerView=findViewById(R.id.lista_detalle);
-        //adaptador=new Adaptador(this,cursor);
+        //adaptador=new Adaptador(this,cursito);
         //recyclerView.setAdapter(adaptador);
         //layoutManager=new LinearLayoutManager(this);
         //recyclerView.setLayoutManager(layoutManager);
@@ -47,6 +63,21 @@ public class Buscador extends AppCompatActivity implements View.OnClickListener 
        // getSupportLoaderManager().restartLoader(1,null, (LoaderManager.LoaderCallbacks<Object>) this);
 
         }
+
+    public void BuscarSumaAportacioSQL(){
+        try {
+            SQLiteDatabase database = helper.getReadableDatabase();
+            totalcursor=database.rawQuery(String.format("select sum(aportacion) from (select * from detalle where fecha between '%s' and '%s') where tipo='positiva'", selectfechainicio, selectfechafinal),null);
+            totalcursor.moveToFirst();
+            float total = totalcursor.getFloat(0);
+            cantidad_total.setText(Float.toString(total));
+
+        }catch (Exception e){
+        Toast toast = Toast.makeText(this, "no se encontraron totales", Toast.LENGTH_SHORT);
+        toast.show();
+
+    }
+    }
 
         public void BuscarAportaionSQL() {
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -63,6 +94,7 @@ public class Buscador extends AppCompatActivity implements View.OnClickListener 
 
         // Filter results WHERE "title" = 'My Title'
             // select * from detalle where fecha between  '2018-28-06' and '2018-29-06'
+            //select sum (aportacion) from detalle where fecha between  '2018-07-14' and '2018-07-14' and tipo='positiva'
         String selection = Estructura_BBDD.NOMBRE_COLUMNA2 + " between '"+selectfechainicio+ "' and '"+ selectfechafinal+"'";
 
 
@@ -70,7 +102,7 @@ public class Buscador extends AppCompatActivity implements View.OnClickListener 
         //String sortOrder =
         // FeedEntry.COLUMN_NAME_SUBTITLE + " DESC";
     try {
-        cursor = db.query(
+        cursito = db.query(
             Estructura_BBDD.NOMBRE_TABLA,   // The table to query
             projection,             // The array of columns to return (pass null to get all)
             selection,              // The columns for the WHERE clause
@@ -79,8 +111,10 @@ public class Buscador extends AppCompatActivity implements View.OnClickListener 
             null,                   // don't filter by row groups
             null              // The sort order
         );
-       //reccorrer(cursor);
+
         cargarAdapter();
+
+
         }catch (Exception e){
             Toast toast = Toast.makeText(this, "no se encontraon registros", Toast.LENGTH_SHORT);
             toast.show();
@@ -94,14 +128,14 @@ public class Buscador extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 // +1 because january is zero
-                final String selectedDate = year + "-" + twoDigits(day) + "-" + twoDigits(month + 1);
+                final String selectedDate = year + "-"+ twoDigits(month + 1)+"-"+twoDigits(day) ;
                 editText.setText(selectedDate);
                 if (editText.equals(etfechainicio)){
                     selectfechainicio=selectedDate;
                     }
                 else {
                     selectfechafinal=selectedDate;
-                    BuscarAportaionSQL();
+                    //BuscarAportaionSQL();
 
                 }
             }
@@ -112,23 +146,11 @@ public class Buscador extends AppCompatActivity implements View.OnClickListener 
     private String twoDigits(int n) {
         return (n <= 9) ? ("0" + n) : String.valueOf(n);
     }
-    public void reccorrer(Cursor cursor){
-        //Nos aseguramos de que existe al menos un registro
-        if (cursor.moveToFirst()) {
-            //Recorremos el cursor hasta que no haya más registros
-            do {
-                String codigo= cursor.getString(0);
-                String nombre = cursor.getString(1);
-                Toast toast = Toast.makeText(this, codigo+" "+nombre, Toast.LENGTH_SHORT);
-                toast.show();
-            } while(cursor.moveToNext());
-        }
 
-    }
 
     public void cargarAdapter(){
         recyclerView=findViewById(R.id.lista_detalle);
-        adaptador=new Adaptador(this,cursor);
+        adaptador=new Adaptador(this, cursito);
         recyclerView.setAdapter(adaptador);
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

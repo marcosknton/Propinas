@@ -42,20 +42,11 @@ class Adaptador extends RecyclerView.Adapter {
 
     public void personalizarVista(ViewHolder holder,Cursor cursor) {
         holder.fecha_registro.setText(cursor.getString(0));
-        holder.cantidad_registro.setText(cursor.getString(1));
+        holder.cantidad_registro.setText(Float.toString(cursor.getFloat(1)));
         holder.tipo_registro.setText(cursor.getString(2));
         holder.total_registro.setText(cursor.getString(3));
 
     }
-    public void swapCursor(Cursor nuevoCursor) {
-        if (nuevoCursor != null) {
-            cursor = nuevoCursor;
-            notifyDataSetChanged();
-        }
-    }
 
-    public Cursor getCursor() {
-        return cursor;
-    }
 
 }

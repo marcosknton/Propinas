@@ -24,7 +24,7 @@ public class Estructura_BBDD {
             "CREATE TABLE " + Estructura_BBDD.NOMBRE_TABLA + " (" +
                     Estructura_BBDD.NOMBRE_COLUMNA1 + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     Estructura_BBDD.NOMBRE_COLUMNA2 + " TEXT," +
-                    Estructura_BBDD.NOMBRE_COLUMNA3 + " TEXT," +
+                    Estructura_BBDD.NOMBRE_COLUMNA3 + " REAL," +
                     Estructura_BBDD.NOMBRE_COLUMNA4 + " TEXT," +
                     Estructura_BBDD.NOMBRE_COLUMNA5 + " TEXT)";
 

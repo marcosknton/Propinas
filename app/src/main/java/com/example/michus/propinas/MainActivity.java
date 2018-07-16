@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
                tipo="negativa";
                }
 
-            cantidad=Float.toString(numero);
+            cantidad=Float.toString(round(numero));
             textView.setText(cantidad);
             guardarAportacion(cantidad);
             guardarAportacionSQL(Float.toString(number),tipo,cantidad);
@@ -164,5 +165,11 @@ public class MainActivity extends AppCompatActivity implements AportacionDialogF
         toast.show();
 
         return text;
+    }
+
+    public static float round(float d) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 }

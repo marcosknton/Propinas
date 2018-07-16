@@ -8,7 +8,7 @@
     tools:context=".Buscador">
 
     <TextView
-        android:text="BUSCADOR"
+        android:text="Seleccionar Fecha"
         android:textSize="20dp"
         android:gravity="center"
         android:layout_width="match_parent"
@@ -47,6 +47,22 @@
 
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/buscador_layout_titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_buscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:textColor="#298A08"
+            android:textStyle="bold"
+            android:text="Buscar" />
+    </LinearLayout>
+
 
     <RelativeLayout
         android:id="@+id/titulos_buscador_layout"
@@ -105,6 +121,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
+    <LinearLayout
+        android:id="@+id/buscador_layout_total"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:paddingLeft="40dp">
+
+
+        <TextView
+            android:id="@+id/textView_titulo_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="total recibido"
+            android:textColor="#298A08"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/textView_cantidad_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            android:textSize="20dp"/>
+    </LinearLayout>
 
 
 </LinearLayout>
